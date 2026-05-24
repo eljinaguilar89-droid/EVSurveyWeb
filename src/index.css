@@ -2,7 +2,7 @@
   /* Primary palette (light, easy-on-eyes) */
   --text: #374151;         /* body text (slate-700) */
   --text-h: #0f1724;       /* headings (slate-900) */
-  --muted: #6b7280;        /* secondary text */
+  --muted: #475569;        /* secondary text (darker for better contrast on iOS) */
 
   --bg: #F7FAFC;           /* page background (very light) */
   --card-bg: #ffffff;      /* cards / panels */
@@ -79,6 +79,28 @@ html[data-theme="dark"] {
 
   --social-bg: rgba(47, 48, 58, 0.5);
   --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+}
+
+/* Ensure programmatic light theme overrides system preference (useful on iOS) */
+html[data-theme="light"] {
+  --text: #374151;
+  --text-h: #0f1724;
+  --muted: #475569;
+
+  --bg: #F7FAFC;
+  --card-bg: #ffffff;
+  --panel-bg: #ffffff;
+  --input-bg: #ffffff;
+  --border: #e6e9ef;
+  --code-bg: #f3f4f6;
+
+  --accent: #06D6A0;
+  --accent-2: #FFD166;
+  --accent-bg: rgba(6, 214, 160, 0.08);
+  --accent-border: rgba(6, 214, 160, 0.25);
+
+  --social-bg: rgba(15, 23, 42, 0.03);
+  --shadow: rgba(16,24,40,0.06) 0 10px 15px -3px, rgba(16,24,40,0.03) 0 4px 6px -2px;
 }
 
 body {

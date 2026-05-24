@@ -210,7 +210,7 @@ function BasicInfoPage({ onContinue, initial }) {
     ...baseInput(field),
     appearance: "none",
     cursor: "pointer",
-    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%236B7280' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%23475569' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "right 1rem center",
     paddingRight: "2.5rem",
@@ -941,7 +941,7 @@ export default function App() {
       if (theme === "dark") {
         document.documentElement.setAttribute("data-theme", "dark");
       } else {
-        document.documentElement.removeAttribute("data-theme");
+        document.documentElement.setAttribute("data-theme", "light");
       }
       try {
         localStorage.setItem("theme", theme);
