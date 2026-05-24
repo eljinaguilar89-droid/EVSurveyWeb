@@ -196,10 +196,10 @@ function BasicInfoPage({ onContinue, initial }) {
   const baseInput = (field) => ({
     width: "100%",
     padding: "0.82rem 1rem",
-    background: "#0F172A",
-    border: `1.5px solid ${errors[field] ? "#FF6B6B" : "#1E293B"}`,
+    background: "var(--input-bg)",
+    border: `1.5px solid ${errors[field] ? "#FF6B6B" : "var(--border)"}`,
     borderRadius: "10px",
-    color: "#F1F5F9",
+    color: "var(--text-h)",
     fontSize: "0.92rem",
     fontFamily: "'DM Sans', sans-serif",
     outline: "none",
@@ -210,7 +210,7 @@ function BasicInfoPage({ onContinue, initial }) {
     ...baseInput(field),
     appearance: "none",
     cursor: "pointer",
-    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%2364748B' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%236B7280' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "right 1rem center",
     paddingRight: "2.5rem",
@@ -220,7 +220,7 @@ function BasicInfoPage({ onContinue, initial }) {
     <span
       style={{
         display: "block",
-        color: "#475569",
+        color: "var(--muted)",
         fontSize: "0.7rem",
         fontWeight: 700,
         letterSpacing: "0.1em",
@@ -237,7 +237,7 @@ function BasicInfoPage({ onContinue, initial }) {
     <div
       style={{
         minHeight: "100vh",
-        background: "#0A0F1E",
+        background: "var(--bg)",
         fontFamily: "'DM Sans', sans-serif",
       }}
     >
@@ -248,10 +248,10 @@ function BasicInfoPage({ onContinue, initial }) {
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes fadeUp { from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)} }
-        input:focus, select:focus { border-color: #06D6A0 !important; }
+        input:focus, select:focus { border-color: var(--accent) !important; }
         .go-btn { transition: all 0.2s ease; cursor: pointer; }
-        .go-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(6,214,160,0.25); }
-        select option { background: #0F172A; color: #F1F5F9; }
+        .go-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(6,214,160,0.12); }
+        select option { background: var(--input-bg); color: var(--text-h); }
       `}</style>
 
       <div
@@ -260,8 +260,11 @@ function BasicInfoPage({ onContinue, initial }) {
           margin: "0 auto",
           padding: "3rem 1.5rem 5rem",
           animation: "fadeUp 0.5s ease both",
-        }}
-      >
+          background: "var(--card-bg)",
+          borderRadius: 12,
+          boxShadow: "var(--shadow)",
+          color: "var(--text)",
+        }}>
         {/* Brand */}
         <div
           style={{
@@ -278,7 +281,7 @@ function BasicInfoPage({ onContinue, initial }) {
               fontWeight: 800,
               fontSize: "0.65rem",
               letterSpacing: "0.14em",
-              color: "#06D6A0",
+              color: "var(--accent)",
             }}
           >
             SOLAR EV CHARGING PH · FEASIBILITY STUDY
@@ -290,7 +293,7 @@ function BasicInfoPage({ onContinue, initial }) {
             fontFamily: "'Space Grotesk', sans-serif",
             fontSize: "clamp(1.7rem, 5vw, 2.3rem)",
             fontWeight: 800,
-            color: "#F1F5F9",
+            color: "var(--text-h)",
             lineHeight: 1.1,
             marginBottom: "0.75rem",
           }}
@@ -301,7 +304,7 @@ function BasicInfoPage({ onContinue, initial }) {
         </h1>
         <p
           style={{
-            color: "#64748B",
+            color: "var(--muted)",
             fontSize: "0.88rem",
             lineHeight: 1.7,
             marginBottom: "2rem",
@@ -311,7 +314,7 @@ function BasicInfoPage({ onContinue, initial }) {
           Philippines.
         </p>
 
-        <div style={{ height: 1, background: "#1E293B", marginBottom: "1.75rem" }} />
+        <div style={{ height: 1, background: "var(--border)", marginBottom: "1.75rem" }} />
 
         <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
           {/* Name */}
@@ -451,7 +454,7 @@ function BasicInfoPage({ onContinue, initial }) {
             }}
           >
             <span style={{ fontSize: "0.95rem", marginTop: "1px" }}>🔒</span>
-            <p style={{ color: "#64748B", fontSize: "0.78rem", lineHeight: 1.65 }}>
+            <p style={{ color: "var(--muted)", fontSize: "0.78rem", lineHeight: 1.65 }}>
               Your data is confidential and used only for this EV charging
               feasibility study. No info will be shared or sold.
             </p>
@@ -466,8 +469,8 @@ function BasicInfoPage({ onContinue, initial }) {
               padding: "1.1rem",
               borderRadius: "12px",
               border: "none",
-              background: "linear-gradient(135deg, #06D6A0, #FFD166)",
-              color: "#0A0F1E",
+              background: "linear-gradient(135deg, #06D6A0, var(--accent-2))",
+              color: "var(--text-h)",
               fontSize: "1rem",
               fontFamily: "'Space Grotesk', sans-serif",
               fontWeight: 800,
@@ -556,7 +559,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
       <div
         style={{
           minHeight: "100vh",
-          background: "#0A0F1E",
+          background: "var(--bg)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -578,7 +581,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
               fontFamily: "'Space Grotesk', sans-serif",
               fontSize: "2.2rem",
               fontWeight: 800,
-              color: "#fff",
+              color: "var(--text-h)",
               marginBottom: "0.75rem",
               lineHeight: 1.1,
             }}
@@ -587,14 +590,14 @@ function SurveyQuestions({ basicInfo, onBack }) {
           </h1>
           <p
             style={{
-              color: "#94A3B8",
+              color: "var(--muted)",
               fontSize: "1rem",
               lineHeight: 1.7,
               marginBottom: "2rem",
             }}
           >
             Your responses will help us build the{" "}
-            <span style={{ color: "#06D6A0", fontWeight: 700 }}>
+            <span style={{ color: "var(--accent)", fontWeight: 700 }}>
               first solar-powered EV charging network
             </span>{" "}
             designed for Filipino drivers. We'll keep you posted on our launch.
@@ -602,12 +605,12 @@ function SurveyQuestions({ basicInfo, onBack }) {
           </p>
           <div
             style={{
-              background: "rgba(6,214,160,0.1)",
-              border: "1px solid rgba(6,214,160,0.3)",
+              background: "var(--accent-bg)",
+              border: "1px solid var(--accent-border)",
               borderRadius: "12px",
               padding: "1.25rem 1.5rem",
               fontSize: "0.85rem",
-              color: "#94A3B8",
+              color: "var(--muted)",
             }}
           >
             {TOTAL} questions answered · {Object.values(answers).flat().length} data
@@ -621,7 +624,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
     <div
       style={{
         minHeight: "100vh",
-        background: "#0A0F1E",
+        background: "var(--bg)",
         fontFamily: "'DM Sans', sans-serif",
         display: "flex",
         flexDirection: "column",
@@ -643,7 +646,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
           left: 0,
           right: 0,
           height: 4,
-          background: "#1E293B",
+          background: "var(--border)",
           zIndex: 100,
         }}
       >
@@ -651,7 +654,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
           style={{
             height: "100%",
             width: `${progress}%`,
-            background: `linear-gradient(90deg,${accent},#FFD166)`,
+            background: `linear-gradient(90deg,${accent}, var(--accent-2))`,
             transition: "width .4s ease,background .4s ease",
             borderRadius: "0 4px 4px 0",
           }}
@@ -678,7 +681,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
           <span
             style={{
               background: accent,
-              color: "#0A0F1E",
+              color: "var(--text-h)",
               fontFamily: "'Space Grotesk',sans-serif",
               fontWeight: 800,
               fontSize: "0.65rem",
@@ -689,7 +692,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
           >
             {q.section}
           </span>
-          <span style={{ color: "#475569", fontSize: "0.82rem" }}>
+          <span style={{ color: "var(--muted)", fontSize: "0.82rem" }}>
             {current + 1} of {TOTAL}
           </span>
         </div>
@@ -701,7 +704,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
                 height: 3,
                 width: i === current ? 24 : 8,
                 borderRadius: 99,
-                background: i <= current ? accent : "#1E293B",
+                background: i <= current ? accent : "var(--border)",
                 transition: "all .3s ease",
                 opacity: i > current ? 0.4 : 1,
               }}
@@ -723,11 +726,11 @@ function SurveyQuestions({ basicInfo, onBack }) {
         }}
       >
         <h2
-          style={{
+            style={{
             fontFamily: "'Space Grotesk',sans-serif",
             fontSize: "clamp(1.25rem,4vw,1.65rem)",
             fontWeight: 800,
-            color: "#F1F5F9",
+              color: "var(--text-h)",
             lineHeight: 1.25,
             marginBottom: q.subtitle ? "0.5rem" : "1.75rem",
           }}
@@ -738,12 +741,12 @@ function SurveyQuestions({ basicInfo, onBack }) {
         {q.subtitle && (
           <p
             style={{
-              color: "#64748B",
+              color: "var(--muted)",
               fontSize: "0.8rem",
               marginBottom: "1.5rem",
               lineHeight: 1.7,
               padding: "0.65rem 1rem",
-              background: "rgba(255,255,255,0.03)",
+              background: "rgba(0,0,0,0.03)",
               borderLeft: `3px solid ${accent}`,
               borderRadius: "0 8px 8px 0",
             }}
@@ -755,7 +758,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
         {q.type === "multi_select" && (
           <p
             style={{
-              color: "#475569",
+              color: "var(--muted)",
               fontSize: "0.78rem",
               marginBottom: "1.25rem",
               letterSpacing: "0.05em",
@@ -779,9 +782,9 @@ function SurveyQuestions({ basicInfo, onBack }) {
                   gap: "1rem",
                   padding: "1rem 1.25rem",
                   borderRadius: "12px",
-                  border: sel ? `1.5px solid ${accent}` : "1.5px solid #1E293B",
-                  background: sel ? `rgba(${hexToRgb(accent)},.12)` : "#111827",
-                  color: sel ? "#F1F5F9" : "#94A3B8",
+                  border: sel ? `1.5px solid ${accent}` : "1.5px solid var(--border)",
+                  background: sel ? `rgba(${hexToRgb(accent)},.12)` : "var(--panel-bg)",
+                  color: sel ? "var(--text-h)" : "var(--muted)",
                   fontSize: "0.95rem",
                   fontFamily: "'DM Sans',sans-serif",
                   fontWeight: sel ? 700 : 400,
@@ -809,7 +812,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "#0A0F1E",
+                      color: "var(--text-h)",
                       fontSize: "0.7rem",
                       fontWeight: 900,
                       flexShrink: 0,
@@ -826,7 +829,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
         {q.skippable && !(answers[q.id] || []).length && (
           <p
             style={{
-              color: "#334155",
+              color: "var(--muted)",
               fontSize: "0.78rem",
               marginTop: "1rem",
               textAlign: "center",
@@ -862,7 +865,7 @@ function SurveyQuestions({ basicInfo, onBack }) {
           bottom: 0,
           left: 0,
           right: 0,
-          background: "linear-gradient(to top,#0A0F1E 70%,transparent)",
+          background: "linear-gradient(to top, rgba(0,0,0,0.03) 70%, transparent)",
           padding: "1.5rem 2rem 2rem",
         }}
       >
@@ -883,9 +886,9 @@ function SurveyQuestions({ basicInfo, onBack }) {
               style={{
                 padding: "0.9rem 1.4rem",
                 borderRadius: "12px",
-                border: "1.5px solid #1E293B",
+                border: "1.5px solid var(--border)",
                 background: "transparent",
-                color: "#64748B",
+                color: "var(--muted)",
                 fontSize: "0.95rem",
                 fontFamily: "'DM Sans',sans-serif",
                 fontWeight: 700,
@@ -905,9 +908,9 @@ function SurveyQuestions({ basicInfo, onBack }) {
               border: "none",
               background:
                 canNext && !submitting
-                  ? `linear-gradient(135deg,${accent},#FFD166)`
-                  : "#1E293B",
-              color: canNext && !submitting ? "#0A0F1E" : "#475569",
+                  ? `linear-gradient(135deg,${accent}, var(--accent-2))`
+                  : "var(--border)",
+              color: canNext && !submitting ? "var(--text-h)" : "var(--muted)",
               fontSize: "1rem",
               fontFamily: "'Space Grotesk',sans-serif",
               fontWeight: 800,
@@ -930,16 +933,67 @@ function SurveyQuestions({ basicInfo, onBack }) {
 export default function App() {
   const [basicInfo, setBasicInfo] = useState(null);
   const [showSurvey, setShowSurvey] = useState(false);
+  const [theme, setTheme] = useState("light");
 
-  return showSurvey ? (
-    <SurveyQuestions basicInfo={basicInfo} onBack={() => setShowSurvey(false)} />
-  ) : (
-    <BasicInfoPage
-      initial={basicInfo}
-      onContinue={(info) => {
-        setBasicInfo(info);
-        setShowSurvey(true);
-      }}
-    />
+  // apply theme to html[data-theme] attribute; default is light (no attribute)
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      if (theme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+      }
+      try {
+        localStorage.setItem("theme", theme);
+      } catch (e) {}
+    }
+  }, [theme]);
+
+  // restore saved preference (optional) — default remains light if none
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved === "dark") setTheme("dark");
+    } catch (e) {}
+  }, []);
+
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+
+  return (
+    <>
+      <button
+        aria-label="Toggle color theme"
+        title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        onClick={toggleTheme}
+        style={{
+          position: "fixed",
+          top: 12,
+          right: 12,
+          zIndex: 9999,
+          background: "var(--card-bg)",
+          border: "1px solid var(--border)",
+          color: "var(--muted)",
+          padding: "8px 10px",
+          borderRadius: 999,
+          boxShadow: "var(--shadow)",
+          cursor: "pointer",
+          fontSize: 16,
+        }}
+      >
+        {theme === "dark" ? "☀️" : "🌙"}
+      </button>
+
+      {showSurvey ? (
+        <SurveyQuestions basicInfo={basicInfo} onBack={() => setShowSurvey(false)} />
+      ) : (
+        <BasicInfoPage
+          initial={basicInfo}
+          onContinue={(info) => {
+            setBasicInfo(info);
+            setShowSurvey(true);
+          }}
+        />
+      )}
+    </>
   );
 }
