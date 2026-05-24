@@ -1,0 +1,72 @@
+Solar EV Charging PH · Feasibility Study
+To understand the needs of Filipino drivers and evaluate the demand for a 100% solar-powered EV charging network, independent of the main electricity grid.
+
+Page 1: Basic Information
+General demographics for research segmentation.
+
+Question 1: Name or Nickname
+
+Input: Text
+
+Question 2: Age
+
+Input: Number (Valid range: 15–90)
+
+Question 3: Gender
+
+Options: Male, Female, Non-binary, Prefer not to say
+
+Question 4: Occupation
+
+Options: Private Sector, Government, Self-employed/Freelancer, Business Owner, Student, Professional Driver, Retired, Unemployed, Other
+
+Question 5: Monthly Household Income
+
+Options: Under ₱15k, ₱15k–₱30k, ₱30k–₱60k, ₱60k–₱100k, ₱100k–₱200k, Over ₱200k, Prefer not to say
+
+Page 2: Your Ride
+Understanding the types of EVs on the road.
+
+Question 6: What type of electric vehicle do you own or plan to own?
+
+Options (Multi-select): Electric Car, E-Moto, E-Bike, E-Trike, Electric Scooter, I don't own one yet.
+
+Question 7: If you own an electric car, what brand is it?
+
+Options (Multi-select/Skippable): BYD, Nissan, MG, Hyundai, Kia, Tesla, Volvo, BMW/Mini, Other, Not applicable.
+
+Page 3: Charging Pain Points
+Question 8: How hard is it for you to find a charging station near you?
+
+Options: Very Hard (Impossible), Hard (Plan ahead), Manageable (Inconvenient), Easy (Accessible), I charge only at home.
+
+Page 4: Charging Behavior
+Question 9: Where do you currently charge or prefer to charge your EV?
+
+Options (Multi-select): Home, Mall/Commercial, Work/Office, Gas Stations, Dedicated EV Hubs, No preference.
+
+Question 10: What charging speed do you prefer when charging outside your home?
+
+Options: Fast Charging (DC / 30–60 mins), Standard (AC / 2–4 hrs), No preference, I only charge at home.
+
+Page 5: Green Energy & Economics
+Question 11: Would you prefer to charge your EV using solar-powered stations?
+
+Options: Yes (100% clean), Yes (if price is competitive), Neutral, No preference, No (trust current grid).
+
+Question 12: How concerned are you about rising electricity costs (Meralco bills) affecting your EV charging?
+
+Options: Extremely concerned, Concerned, Somewhat, Not really, Not at all.
+
+Question 13: How much would you pay per kWh for solar-powered EV charging?
+
+Options: Below ₱14.35 (Cheaper than Meralco), ₱14.35–₱23 (Fair range), ₱23–₱28.50 (Commercial fast rate), I don't mind the price if it's solar/fast.
+
+Page 6: About You (Timeline & Location)
+Question 14: Where in the Philippines are you based?
+
+Options: Metro Manila (NCR), Luzon (outside NCR), Visayas, Mindanao.
+
+Question 15: When do you plan to own or switch to an EV?
+
+Options: Already own one, Within 6 months, 1–2 years, 2–5 years, Not sure yet.
