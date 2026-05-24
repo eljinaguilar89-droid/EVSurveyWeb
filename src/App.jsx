@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { submitSurveyResponse } from "./supabaseClient";
 
-// ─── SURVEY QUESTIONS (v1 restored) ──────────────────────────────────────────
+// ─── SURVEY QUESTIONS ─────────────────────────────────────────────────────────
 const questions = [
   {
     id: "vehicle_type",
@@ -93,7 +94,8 @@ const questions = [
   {
     id: "meralco_concern",
     section: "GREEN ENERGY",
-    question: "How concerned are you about rising electricity costs (Meralco bills) affecting your EV charging?",
+    question:
+      "How concerned are you about rising electricity costs (Meralco bills) affecting your EV charging?",
     type: "single_select",
     options: [
       { label: "Extremely concerned — it affects my EV use", icon: "😰" },
@@ -107,7 +109,8 @@ const questions = [
     id: "willingness_to_pay",
     section: "GREEN ENERGY",
     question: "How much you pay per kWh for solar-powered EV charging?",
-    subtitle: "📊 Actual PH rates: Meralco residential = ₱14.3496/kWh · Public AC chargers = ₱14–18/kWh · DC Fast chargers at major commercial hubs = ₱23.65–₱28.50/kWh",
+    subtitle:
+      "📊 Actual PH rates: Meralco residential = ₱14.3496/kWh · Public AC chargers = ₱14–18/kWh · DC Fast chargers at major commercial hubs = ₱23.65–₱28.50/kWh",
     type: "single_select",
     options: [
       { label: "Below ₱14.35/kWh — must be cheaper than Meralco", icon: "🪙" },
@@ -155,20 +158,32 @@ const sectionColors = {
 
 function hexToRgb(hex) {
   const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return r ? `${parseInt(r[1],16)}, ${parseInt(r[2],16)}, ${parseInt(r[3],16)}` : "255,255,255";
+  return r
+    ? `${parseInt(r[1], 16)}, ${parseInt(r[2], 16)}, ${parseInt(r[3], 16)}`
+    : "255,255,255";
 }
 
-// ─── BASIC INFO PAGE (single page) ───────────────────────────────────────────
+// ─── BASIC INFO PAGE ──────────────────────────────────────────────────────────
 function BasicInfoPage({ onContinue }) {
-  const [info, setInfo] = useState({ name: "", age: "", gender: "", occupation: "", monthly_income: "" });
+  const [info, setInfo] = useState({
+    name: "",
+    age: "",
+    gender: "",
+    occupation: "",
+    monthly_income: "",
+  });
   const [errors, setErrors] = useState({});
 
-  const set = (k, v) => { setInfo((p) => ({ ...p, [k]: v })); setErrors((e) => ({ ...e, [k]: "" })); };
+  const set = (k, v) => {
+    setInfo((p) => ({ ...p, [k]: v }));
+    setErrors((e) => ({ ...e, [k]: "" }));
+  };
 
   const validate = () => {
     const e = {};
     if (!info.name.trim()) e.name = "Required";
-    if (!info.age || isNaN(+info.age) || +info.age < 15 || +info.age > 90) e.age = "Valid age (15–90)";
+    if (!info.age || isNaN(+info.age) || +info.age < 15 || +info.age > 90)
+      e.age = "Valid age (15–90)";
     if (!info.gender) e.gender = "Required";
     if (!info.occupation) e.occupation = "Required";
     if (!info.monthly_income) e.monthly_income = "Required";
@@ -177,30 +192,57 @@ function BasicInfoPage({ onContinue }) {
   };
 
   const baseInput = (field) => ({
-    width: "100%", padding: "0.82rem 1rem",
+    width: "100%",
+    padding: "0.82rem 1rem",
     background: "#0F172A",
     border: `1.5px solid ${errors[field] ? "#FF6B6B" : "#1E293B"}`,
-    borderRadius: "10px", color: "#F1F5F9", fontSize: "0.92rem",
-    fontFamily: "'DM Sans', sans-serif", outline: "none",
+    borderRadius: "10px",
+    color: "#F1F5F9",
+    fontSize: "0.92rem",
+    fontFamily: "'DM Sans', sans-serif",
+    outline: "none",
     transition: "border-color 0.2s",
   });
 
   const selectBase = (field) => ({
     ...baseInput(field),
-    appearance: "none", cursor: "pointer",
+    appearance: "none",
+    cursor: "pointer",
     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%2364748B' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,
-    backgroundRepeat: "no-repeat", backgroundPosition: "right 1rem center", paddingRight: "2.5rem",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "right 1rem center",
+    paddingRight: "2.5rem",
   });
 
   const label = (text) => (
-    <span style={{ display: "block", color: "#475569", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", marginBottom: "0.4rem" }}>{text}</span>
+    <span
+      style={{
+        display: "block",
+        color: "#475569",
+        fontSize: "0.7rem",
+        fontWeight: 700,
+        letterSpacing: "0.1em",
+        marginBottom: "0.4rem",
+      }}
+    >
+      {text}
+    </span>
   );
 
   const fieldWrap = { display: "flex", flexDirection: "column", gap: "0.35rem" };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0A0F1E", fontFamily: "'DM Sans', sans-serif" }}>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet" />
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#0A0F1E",
+        fontFamily: "'DM Sans', sans-serif",
+      }}
+    >
+      <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@700;800&display=swap"
+        rel="stylesheet"
+      />
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes fadeUp { from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)} }
@@ -210,61 +252,131 @@ function BasicInfoPage({ onContinue }) {
         select option { background: #0F172A; color: #F1F5F9; }
       `}</style>
 
-      <div style={{ maxWidth: 640, margin: "0 auto", padding: "3rem 1.5rem 5rem", animation: "fadeUp 0.5s ease both" }}>
-
+      <div
+        style={{
+          maxWidth: 640,
+          margin: "0 auto",
+          padding: "3rem 1.5rem 5rem",
+          animation: "fadeUp 0.5s ease both",
+        }}
+      >
         {/* Brand */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "2rem" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            marginBottom: "2rem",
+          }}
+        >
           <span style={{ fontSize: "1.3rem" }}>☀️</span>
-          <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800, fontSize: "0.65rem", letterSpacing: "0.14em", color: "#06D6A0" }}>
+          <span
+            style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 800,
+              fontSize: "0.65rem",
+              letterSpacing: "0.14em",
+              color: "#06D6A0",
+            }}
+          >
             SOLAR EV CHARGING PH · FEASIBILITY STUDY
           </span>
         </div>
 
-        <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "clamp(1.7rem, 5vw, 2.3rem)", fontWeight: 800, color: "#F1F5F9", lineHeight: 1.1, marginBottom: "0.75rem" }}>
-          Before we start,<br />tell us about you.
+        <h1
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: "clamp(1.7rem, 5vw, 2.3rem)",
+            fontWeight: 800,
+            color: "#F1F5F9",
+            lineHeight: 1.1,
+            marginBottom: "0.75rem",
+          }}
+        >
+          Before we start,
+          <br />
+          tell us about you.
         </h1>
-        <p style={{ color: "#64748B", fontSize: "0.88rem", lineHeight: 1.7, marginBottom: "2rem" }}>
-          Helps us understand who needs solar EV charging most across the Philippines. Anonymous & confidential.
+        <p
+          style={{
+            color: "#64748B",
+            fontSize: "0.88rem",
+            lineHeight: 1.7,
+            marginBottom: "2rem",
+          }}
+        >
+          Helps us understand who needs solar EV charging most across the
+          Philippines. Anonymous &amp; confidential.
         </p>
 
-        {/* Divider */}
         <div style={{ height: 1, background: "#1E293B", marginBottom: "1.75rem" }} />
 
         <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
-
           {/* Name */}
           <div style={fieldWrap}>
             {label("NAME OR NICKNAME")}
-            <input type="text" placeholder="e.g. Juan dela Cruz" value={info.name}
-              onChange={(e) => set("name", e.target.value)} style={baseInput("name")} />
-            {errors.name && <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>{errors.name}</span>}
+            <input
+              type="text"
+              placeholder="e.g. Juan dela Cruz"
+              value={info.name}
+              onChange={(e) => set("name", e.target.value)}
+              style={baseInput("name")}
+            />
+            {errors.name && (
+              <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>
+                {errors.name}
+              </span>
+            )}
           </div>
 
           {/* Age + Gender */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
             <div style={fieldWrap}>
               {label("AGE")}
-              <input type="number" placeholder="e.g. 28" min={15} max={90}
-                value={info.age} onChange={(e) => set("age", e.target.value)} style={baseInput("age")} />
-              {errors.age && <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>{errors.age}</span>}
+              <input
+                type="number"
+                placeholder="e.g. 28"
+                min={15}
+                max={90}
+                value={info.age}
+                onChange={(e) => set("age", e.target.value)}
+                style={baseInput("age")}
+              />
+              {errors.age && (
+                <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>
+                  {errors.age}
+                </span>
+              )}
             </div>
             <div style={fieldWrap}>
               {label("GENDER")}
-              <select value={info.gender} onChange={(e) => set("gender", e.target.value)} style={selectBase("gender")}>
+              <select
+                value={info.gender}
+                onChange={(e) => set("gender", e.target.value)}
+                style={selectBase("gender")}
+              >
                 <option value="">Select...</option>
                 <option>Male</option>
                 <option>Female</option>
                 <option>Non-binary</option>
                 <option>Prefer not to say</option>
               </select>
-              {errors.gender && <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>{errors.gender}</span>}
+              {errors.gender && (
+                <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>
+                  {errors.gender}
+                </span>
+              )}
             </div>
           </div>
 
           {/* Occupation */}
           <div style={fieldWrap}>
             {label("OCCUPATION")}
-            <select value={info.occupation} onChange={(e) => set("occupation", e.target.value)} style={selectBase("occupation")}>
+            <select
+              value={info.occupation}
+              onChange={(e) => set("occupation", e.target.value)}
+              style={selectBase("occupation")}
+            >
               <option value="">Select your occupation...</option>
               <option>Employed — Private sector</option>
               <option>Employed — Government / Public sector</option>
@@ -276,13 +388,21 @@ function BasicInfoPage({ onContinue }) {
               <option>Currently unemployed</option>
               <option>Other</option>
             </select>
-            {errors.occupation && <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>{errors.occupation}</span>}
+            {errors.occupation && (
+              <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>
+                {errors.occupation}
+              </span>
+            )}
           </div>
 
           {/* Monthly income */}
           <div style={fieldWrap}>
             {label("MONTHLY HOUSEHOLD INCOME")}
-            <select value={info.monthly_income} onChange={(e) => set("monthly_income", e.target.value)} style={selectBase("monthly_income")}>
+            <select
+              value={info.monthly_income}
+              onChange={(e) => set("monthly_income", e.target.value)}
+              style={selectBase("monthly_income")}
+            >
               <option value="">Select income range...</option>
               <option>Under ₱15,000</option>
               <option>₱15,000–₱30,000</option>
@@ -292,29 +412,50 @@ function BasicInfoPage({ onContinue }) {
               <option>Over ₱200,000</option>
               <option>Prefer not to say</option>
             </select>
-            {errors.monthly_income && <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>{errors.monthly_income}</span>}
+            {errors.monthly_income && (
+              <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>
+                {errors.monthly_income}
+              </span>
+            )}
           </div>
 
           {/* Privacy */}
-          <div style={{
-            background: "rgba(6,214,160,0.06)", border: "1px solid rgba(6,214,160,0.18)",
-            borderRadius: "10px", padding: "0.85rem 1rem",
-            display: "flex", gap: "0.6rem", alignItems: "flex-start",
-          }}>
+          <div
+            style={{
+              background: "rgba(6,214,160,0.06)",
+              border: "1px solid rgba(6,214,160,0.18)",
+              borderRadius: "10px",
+              padding: "0.85rem 1rem",
+              display: "flex",
+              gap: "0.6rem",
+              alignItems: "flex-start",
+            }}
+          >
             <span style={{ fontSize: "0.95rem", marginTop: "1px" }}>🔒</span>
             <p style={{ color: "#64748B", fontSize: "0.78rem", lineHeight: 1.65 }}>
-              Your data is confidential and used only for this EV charging feasibility study. No info will be shared or sold.
+              Your data is confidential and used only for this EV charging
+              feasibility study. No info will be shared or sold.
             </p>
           </div>
 
           {/* CTA */}
-          <button onClick={() => validate() && onContinue(info)} className="go-btn" style={{
-            width: "100%", padding: "1.1rem", borderRadius: "12px", border: "none",
-            background: "linear-gradient(135deg, #06D6A0, #FFD166)",
-            color: "#0A0F1E", fontSize: "1rem",
-            fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800,
-            letterSpacing: "0.02em", marginTop: "0.25rem",
-          }}>
+          <button
+            onClick={() => validate() && onContinue(info)}
+            className="go-btn"
+            style={{
+              width: "100%",
+              padding: "1.1rem",
+              borderRadius: "12px",
+              border: "none",
+              background: "linear-gradient(135deg, #06D6A0, #FFD166)",
+              color: "#0A0F1E",
+              fontSize: "1rem",
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 800,
+              letterSpacing: "0.02em",
+              marginTop: "0.25rem",
+            }}
+          >
             Start the Survey →
           </button>
         </div>
@@ -328,6 +469,8 @@ function SurveyQuestions({ basicInfo }) {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [direction, setDirection] = useState("forward");
   const [animKey, setAnimKey] = useState(0);
 
@@ -337,46 +480,128 @@ function SurveyQuestions({ basicInfo }) {
 
   const toggle = (id, value, type) => {
     if (type === "single_select") setAnswers((a) => ({ ...a, [id]: [value] }));
-    else setAnswers((a) => {
-      const prev = a[id] || [];
-      return { ...a, [id]: prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value] };
-    });
+    else
+      setAnswers((a) => {
+        const prev = a[id] || [];
+        return {
+          ...a,
+          [id]: prev.includes(value)
+            ? prev.filter((v) => v !== value)
+            : [...prev, value],
+        };
+      });
   };
 
   const isSelected = (id, val) => (answers[id] || []).includes(val);
   const canNext = (answers[q.id] || []).length > 0 || q.skippable;
 
-  const goNext = () => {
+  const goNext = async () => {
     if (!canNext) return;
-    setDirection("forward"); setAnimKey((k) => k + 1);
-    if (current < TOTAL - 1) setCurrent((c) => c + 1); else setSubmitted(true);
+    setDirection("forward");
+    setAnimKey((k) => k + 1);
+
+    if (current < TOTAL - 1) {
+      setCurrent((c) => c + 1);
+    } else {
+      // Final question — submit to Supabase
+      setSubmitting(true);
+      setSubmitError(null);
+      const result = await submitSurveyResponse(basicInfo, answers);
+      setSubmitting(false);
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        setSubmitError(
+          result.error ||
+            "Something went wrong saving your response. Please try again."
+        );
+      }
+    }
   };
+
   const goBack = () => {
     if (!current) return;
-    setDirection("back"); setAnimKey((k) => k + 1);
+    setDirection("back");
+    setAnimKey((k) => k + 1);
     setCurrent((c) => c - 1);
   };
 
-  if (submitted) return (
-    <div style={{ minHeight: "100vh", background: "#0A0F1E", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif", padding: "2rem" }}>
-      <style>{`@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}`}</style>
-      <div style={{ textAlign: "center", maxWidth: 480, animation: "fadeUp 0.6s ease both" }}>
-        <div style={{ fontSize: "5rem", marginBottom: "1rem" }}>☀️</div>
-        <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "2.2rem", fontWeight: 800, color: "#fff", marginBottom: "0.75rem", lineHeight: 1.1 }}>
-          Salamat, {basicInfo.name.split(" ")[0]}!
-        </h1>
-        <p style={{ color: "#94A3B8", fontSize: "1rem", lineHeight: 1.7, marginBottom: "2rem" }}>
-          Your responses will help us build the <span style={{ color: "#06D6A0", fontWeight: 700 }}>first solar-powered EV charging network</span> designed for Filipino drivers. We'll keep you posted on our launch. 🇵🇭⚡
-        </p>
-        <div style={{ background: "rgba(6,214,160,0.1)", border: "1px solid rgba(6,214,160,0.3)", borderRadius: "12px", padding: "1.25rem 1.5rem", fontSize: "0.85rem", color: "#94A3B8" }}>
-          {TOTAL} questions answered · {Object.values(answers).flat().length} data points collected
+  if (submitted)
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#0A0F1E",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: "'DM Sans', sans-serif",
+          padding: "2rem",
+        }}
+      >
+        <style>{`@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}`}</style>
+        <div
+          style={{
+            textAlign: "center",
+            maxWidth: 480,
+            animation: "fadeUp 0.6s ease both",
+          }}
+        >
+          <div style={{ fontSize: "5rem", marginBottom: "1rem" }}>☀️</div>
+          <h1
+            style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontSize: "2.2rem",
+              fontWeight: 800,
+              color: "#fff",
+              marginBottom: "0.75rem",
+              lineHeight: 1.1,
+            }}
+          >
+            Salamat, {basicInfo.name.split(" ")[0]}!
+          </h1>
+          <p
+            style={{
+              color: "#94A3B8",
+              fontSize: "1rem",
+              lineHeight: 1.7,
+              marginBottom: "2rem",
+            }}
+          >
+            Your responses will help us build the{" "}
+            <span style={{ color: "#06D6A0", fontWeight: 700 }}>
+              first solar-powered EV charging network
+            </span>{" "}
+            designed for Filipino drivers. We'll keep you posted on our launch.
+            🇵🇭⚡
+          </p>
+          <div
+            style={{
+              background: "rgba(6,214,160,0.1)",
+              border: "1px solid rgba(6,214,160,0.3)",
+              borderRadius: "12px",
+              padding: "1.25rem 1.5rem",
+              fontSize: "0.85rem",
+              color: "#94A3B8",
+            }}
+          >
+            {TOTAL} questions answered · {Object.values(answers).flat().length} data
+            points collected
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0A0F1E", fontFamily: "'DM Sans', sans-serif", display: "flex", flexDirection: "column" }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#0A0F1E",
+        fontFamily: "'DM Sans', sans-serif",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <style>{`
         *{box-sizing:border-box;margin:0;padding:0}
         @keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
@@ -386,71 +611,290 @@ function SurveyQuestions({ basicInfo }) {
       `}</style>
 
       {/* Top progress bar */}
-      <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: 4, background: "#1E293B", zIndex: 100 }}>
-        <div style={{ height: "100%", width: `${progress}%`, background: `linear-gradient(90deg,${accent},#FFD166)`, transition: "width .4s ease,background .4s ease", borderRadius: "0 4px 4px 0" }} />
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 4,
+          background: "#1E293B",
+          zIndex: 100,
+        }}
+      >
+        <div
+          style={{
+            height: "100%",
+            width: `${progress}%`,
+            background: `linear-gradient(90deg,${accent},#FFD166)`,
+            transition: "width .4s ease,background .4s ease",
+            borderRadius: "0 4px 4px 0",
+          }}
+        />
       </div>
 
       {/* Section + step */}
-      <div style={{ padding: "2.5rem 2rem 0", maxWidth: 680, margin: "0 auto", width: "100%" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.5rem" }}>
-          <span style={{ background: accent, color: "#0A0F1E", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "0.65rem", letterSpacing: "0.1em", padding: "3px 10px", borderRadius: 999 }}>{q.section}</span>
-          <span style={{ color: "#475569", fontSize: "0.82rem" }}>{current + 1} of {TOTAL}</span>
+      <div
+        style={{
+          padding: "2.5rem 2rem 0",
+          maxWidth: 680,
+          margin: "0 auto",
+          width: "100%",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            marginBottom: "0.5rem",
+          }}
+        >
+          <span
+            style={{
+              background: accent,
+              color: "#0A0F1E",
+              fontFamily: "'Space Grotesk',sans-serif",
+              fontWeight: 800,
+              fontSize: "0.65rem",
+              letterSpacing: "0.1em",
+              padding: "3px 10px",
+              borderRadius: 999,
+            }}
+          >
+            {q.section}
+          </span>
+          <span style={{ color: "#475569", fontSize: "0.82rem" }}>
+            {current + 1} of {TOTAL}
+          </span>
         </div>
         <div style={{ display: "flex", gap: 4, marginBottom: "0.5rem" }}>
           {questions.map((_, i) => (
-            <div key={i} style={{ height: 3, width: i === current ? 24 : 8, borderRadius: 99, background: i <= current ? accent : "#1E293B", transition: "all .3s ease", opacity: i > current ? 0.4 : 1 }} />
+            <div
+              key={i}
+              style={{
+                height: 3,
+                width: i === current ? 24 : 8,
+                borderRadius: 99,
+                background: i <= current ? accent : "#1E293B",
+                transition: "all .3s ease",
+                opacity: i > current ? 0.4 : 1,
+              }}
+            />
           ))}
         </div>
       </div>
 
       {/* Question body */}
-      <div key={animKey} style={{ flex: 1, maxWidth: 680, margin: "0 auto", width: "100%", padding: "1.5rem 2rem 7rem", animation: `${direction === "forward" ? "slideIn" : "slideInBack"} .35s ease both` }}>
-        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(1.25rem,4vw,1.65rem)", fontWeight: 800, color: "#F1F5F9", lineHeight: 1.25, marginBottom: q.subtitle ? "0.5rem" : "1.75rem" }}>{q.question}</h2>
+      <div
+        key={animKey}
+        style={{
+          flex: 1,
+          maxWidth: 680,
+          margin: "0 auto",
+          width: "100%",
+          padding: "1.5rem 2rem 7rem",
+          animation: `${direction === "forward" ? "slideIn" : "slideInBack"} .35s ease both`,
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: "'Space Grotesk',sans-serif",
+            fontSize: "clamp(1.25rem,4vw,1.65rem)",
+            fontWeight: 800,
+            color: "#F1F5F9",
+            lineHeight: 1.25,
+            marginBottom: q.subtitle ? "0.5rem" : "1.75rem",
+          }}
+        >
+          {q.question}
+        </h2>
 
         {q.subtitle && (
-          <p style={{ color: "#64748B", fontSize: "0.8rem", marginBottom: "1.5rem", lineHeight: 1.7, padding: "0.65rem 1rem", background: "rgba(255,255,255,0.03)", borderLeft: `3px solid ${accent}`, borderRadius: "0 8px 8px 0" }}>{q.subtitle}</p>
+          <p
+            style={{
+              color: "#64748B",
+              fontSize: "0.8rem",
+              marginBottom: "1.5rem",
+              lineHeight: 1.7,
+              padding: "0.65rem 1rem",
+              background: "rgba(255,255,255,0.03)",
+              borderLeft: `3px solid ${accent}`,
+              borderRadius: "0 8px 8px 0",
+            }}
+          >
+            {q.subtitle}
+          </p>
         )}
 
         {q.type === "multi_select" && (
-          <p style={{ color: "#475569", fontSize: "0.78rem", marginBottom: "1.25rem", letterSpacing: "0.05em" }}>SELECT ALL THAT APPLY</p>
+          <p
+            style={{
+              color: "#475569",
+              fontSize: "0.78rem",
+              marginBottom: "1.25rem",
+              letterSpacing: "0.05em",
+            }}
+          >
+            SELECT ALL THAT APPLY
+          </p>
         )}
 
         <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
           {q.options.map((opt) => {
             const sel = isSelected(q.id, opt.label);
             return (
-              <button key={opt.label} className="opt" onClick={() => toggle(q.id, opt.label, q.type)} style={{
-                display: "flex", alignItems: "center", gap: "1rem", padding: "1rem 1.25rem", borderRadius: "12px",
-                border: sel ? `1.5px solid ${accent}` : "1.5px solid #1E293B",
-                background: sel ? `rgba(${hexToRgb(accent)},.12)` : "#111827",
-                color: sel ? "#F1F5F9" : "#94A3B8", fontSize: "0.95rem",
-                fontFamily: "'DM Sans',sans-serif", fontWeight: sel ? 700 : 400, textAlign: "left",
-              }}>
-                <span style={{ fontSize: "1.4rem", minWidth: 32, textAlign: "center", filter: sel ? "none" : "grayscale(.5)" }}>{opt.icon}</span>
+              <button
+                key={opt.label}
+                className="opt"
+                onClick={() => toggle(q.id, opt.label, q.type)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1rem",
+                  padding: "1rem 1.25rem",
+                  borderRadius: "12px",
+                  border: sel ? `1.5px solid ${accent}` : "1.5px solid #1E293B",
+                  background: sel ? `rgba(${hexToRgb(accent)},.12)` : "#111827",
+                  color: sel ? "#F1F5F9" : "#94A3B8",
+                  fontSize: "0.95rem",
+                  fontFamily: "'DM Sans',sans-serif",
+                  fontWeight: sel ? 700 : 400,
+                  textAlign: "left",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "1.4rem",
+                    minWidth: 32,
+                    textAlign: "center",
+                    filter: sel ? "none" : "grayscale(.5)",
+                  }}
+                >
+                  {opt.icon}
+                </span>
                 <span style={{ flex: 1 }}>{opt.label}</span>
-                {sel && <span style={{ width: 20, height: 20, borderRadius: "50%", background: accent, display: "flex", alignItems: "center", justifyContent: "center", color: "#0A0F1E", fontSize: "0.7rem", fontWeight: 900, flexShrink: 0 }}>✓</span>}
+                {sel && (
+                  <span
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: "50%",
+                      background: accent,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#0A0F1E",
+                      fontSize: "0.7rem",
+                      fontWeight: 900,
+                      flexShrink: 0,
+                    }}
+                  >
+                    ✓
+                  </span>
+                )}
               </button>
             );
           })}
         </div>
 
         {q.skippable && !(answers[q.id] || []).length && (
-          <p style={{ color: "#334155", fontSize: "0.78rem", marginTop: "1rem", textAlign: "center" }}>You can skip this if not applicable →</p>
+          <p
+            style={{
+              color: "#334155",
+              fontSize: "0.78rem",
+              marginTop: "1rem",
+              textAlign: "center",
+            }}
+          >
+            You can skip this if not applicable →
+          </p>
+        )}
+
+        {/* Submit error */}
+        {submitError && (
+          <div
+            style={{
+              marginTop: "1rem",
+              padding: "0.85rem 1rem",
+              background: "rgba(255,107,107,0.1)",
+              border: "1px solid rgba(255,107,107,0.3)",
+              borderRadius: "10px",
+              color: "#FF6B6B",
+              fontSize: "0.82rem",
+              lineHeight: 1.6,
+            }}
+          >
+            ⚠️ {submitError}
+          </div>
         )}
       </div>
 
       {/* Nav footer */}
-      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "linear-gradient(to top,#0A0F1E 70%,transparent)", padding: "1.5rem 2rem 2rem" }}>
-        <div style={{ maxWidth: 680, margin: "0 auto", display: "flex", gap: "0.75rem", alignItems: "center" }}>
+      <div
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: "linear-gradient(to top,#0A0F1E 70%,transparent)",
+          padding: "1.5rem 2rem 2rem",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 680,
+            margin: "0 auto",
+            display: "flex",
+            gap: "0.75rem",
+            alignItems: "center",
+          }}
+        >
           {current > 0 && (
-            <button onClick={goBack} className="nb" style={{ padding: "0.9rem 1.4rem", borderRadius: "12px", border: "1.5px solid #1E293B", background: "transparent", color: "#64748B", fontSize: "0.95rem", fontFamily: "'DM Sans',sans-serif", fontWeight: 700 }}>← Back</button>
+            <button
+              onClick={goBack}
+              disabled={submitting}
+              className="nb"
+              style={{
+                padding: "0.9rem 1.4rem",
+                borderRadius: "12px",
+                border: "1.5px solid #1E293B",
+                background: "transparent",
+                color: "#64748B",
+                fontSize: "0.95rem",
+                fontFamily: "'DM Sans',sans-serif",
+                fontWeight: 700,
+              }}
+            >
+              ← Back
+            </button>
           )}
-          <button onClick={goNext} disabled={!canNext} className="nb" style={{
-            flex: 1, padding: "1rem", borderRadius: "12px", border: "none",
-            background: canNext ? `linear-gradient(135deg,${accent},#FFD166)` : "#1E293B",
-            color: canNext ? "#0A0F1E" : "#475569", fontSize: "1rem",
-            fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, letterSpacing: "0.02em",
-          }}>{current === TOTAL - 1 ? "Submit Survey ☀️" : "Next →"}</button>
+          <button
+            onClick={goNext}
+            disabled={!canNext || submitting}
+            className="nb"
+            style={{
+              flex: 1,
+              padding: "1rem",
+              borderRadius: "12px",
+              border: "none",
+              background:
+                canNext && !submitting
+                  ? `linear-gradient(135deg,${accent},#FFD166)`
+                  : "#1E293B",
+              color: canNext && !submitting ? "#0A0F1E" : "#475569",
+              fontSize: "1rem",
+              fontFamily: "'Space Grotesk',sans-serif",
+              fontWeight: 800,
+              letterSpacing: "0.02em",
+            }}
+          >
+            {submitting
+              ? "Saving… ⏳"
+              : current === TOTAL - 1
+              ? "Submit Survey ☀️"
+              : "Next →"}
+          </button>
         </div>
       </div>
     </div>
@@ -460,5 +904,9 @@ function SurveyQuestions({ basicInfo }) {
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [basicInfo, setBasicInfo] = useState(null);
-  return basicInfo ? <SurveyQuestions basicInfo={basicInfo} /> : <BasicInfoPage onContinue={setBasicInfo} />;
+  return basicInfo ? (
+    <SurveyQuestions basicInfo={basicInfo} />
+  ) : (
+    <BasicInfoPage onContinue={setBasicInfo} />
+  );
 }
