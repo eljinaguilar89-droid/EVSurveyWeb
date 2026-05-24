@@ -19,7 +19,7 @@ export const supabase =
 /**
  * Submit a completed survey response to Supabase.
  *
- * @param {Object} basicInfo  - name, age, gender, occupation, monthly_income
+ * @param {Object} basicInfo  - name, email (optional), age, gender, occupation, monthly_income
  * @param {Object} answers    - { [questionId]: string[] }
  * @returns {{ success: boolean, error?: string }}
  */
@@ -32,6 +32,7 @@ export async function submitSurveyResponse(basicInfo, answers) {
   const payload = {
     // ── Respondent info ──────────────────────────────────────────────────
     name: basicInfo.name.trim(),
+    email: basicInfo.email && basicInfo.email.trim() ? basicInfo.email.trim() : null,
     age: parseInt(basicInfo.age, 10),
     gender: basicInfo.gender,
     occupation: basicInfo.occupation,

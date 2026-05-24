@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS survey_responses (
 
   -- Respondent demographics
   name               TEXT        NOT NULL,
+  email              TEXT,
   age                SMALLINT    NOT NULL CHECK (age BETWEEN 15 AND 90),
   gender             TEXT        NOT NULL,
   occupation         TEXT        NOT NULL,

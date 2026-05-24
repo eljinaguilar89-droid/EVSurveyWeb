@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { submitSurveyResponse } from "./supabaseClient";
 
 // ─── SURVEY QUESTIONS ─────────────────────────────────────────────────────────
@@ -164,14 +164,15 @@ function hexToRgb(hex) {
 }
 
 // ─── BASIC INFO PAGE ──────────────────────────────────────────────────────────
-function BasicInfoPage({ onContinue }) {
-  const [info, setInfo] = useState({
-    name: "",
-    age: "",
-    gender: "",
-    occupation: "",
-    monthly_income: "",
-  });
+function BasicInfoPage({ onContinue, initial }) {
+  const [info, setInfo] = useState(() => ({
+    name: initial?.name || "",
+    email: initial?.email || "",
+    age: initial?.age || "",
+    gender: initial?.gender || "",
+    occupation: initial?.occupation || "",
+    monthly_income: initial?.monthly_income || "",
+  }));
   const [errors, setErrors] = useState({});
 
   const set = (k, v) => {
@@ -182,6 +183,7 @@ function BasicInfoPage({ onContinue }) {
   const validate = () => {
     const e = {};
     if (!info.name.trim()) e.name = "Required";
+    if (info.email && !/^\S+@\S+\.\S+$/.test(info.email)) e.email = "Enter a valid email";
     if (!info.age || isNaN(+info.age) || +info.age < 15 || +info.age > 90)
       e.age = "Valid age (15–90)";
     if (!info.gender) e.gender = "Required";
@@ -306,7 +308,7 @@ function BasicInfoPage({ onContinue }) {
           }}
         >
           Helps us understand who needs solar EV charging most across the
-          Philippines. Anonymous &amp; confidential.
+          Philippines.
         </p>
 
         <div style={{ height: 1, background: "#1E293B", marginBottom: "1.75rem" }} />
@@ -325,6 +327,23 @@ function BasicInfoPage({ onContinue }) {
             {errors.name && (
               <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>
                 {errors.name}
+              </span>
+            )}
+          </div>
+
+          {/* Email */}
+          <div style={fieldWrap}>
+            {label("EMAIL (optional)")}
+            <input
+              type="email"
+              placeholder="e.g. juan@example.com"
+              value={info.email}
+              onChange={(e) => set("email", e.target.value)}
+              style={baseInput("email")}
+            />
+            {errors.email && (
+              <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>
+                {errors.email}
               </span>
             )}
           </div>
@@ -465,7 +484,7 @@ function BasicInfoPage({ onContinue }) {
 }
 
 // ─── SURVEY QUESTIONS VIEW ────────────────────────────────────────────────────
-function SurveyQuestions({ basicInfo }) {
+function SurveyQuestions({ basicInfo, onBack }) {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -477,6 +496,12 @@ function SurveyQuestions({ basicInfo }) {
   const q = questions[current];
   const accent = sectionColors[q?.section] || "#FFD166";
   const progress = (current / TOTAL) * 100;
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [animKey]);
 
   const toggle = (id, value, type) => {
     if (type === "single_select") setAnswers((a) => ({ ...a, [id]: [value] }));
@@ -850,9 +875,9 @@ function SurveyQuestions({ basicInfo }) {
             alignItems: "center",
           }}
         >
-          {current > 0 && (
+          {(current > 0 || onBack) && (
             <button
-              onClick={goBack}
+              onClick={current > 0 ? goBack : onBack}
               disabled={submitting}
               className="nb"
               style={{
@@ -904,9 +929,17 @@ function SurveyQuestions({ basicInfo }) {
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [basicInfo, setBasicInfo] = useState(null);
-  return basicInfo ? (
-    <SurveyQuestions basicInfo={basicInfo} />
+  const [showSurvey, setShowSurvey] = useState(false);
+
+  return showSurvey ? (
+    <SurveyQuestions basicInfo={basicInfo} onBack={() => setShowSurvey(false)} />
   ) : (
-    <BasicInfoPage onContinue={setBasicInfo} />
+    <BasicInfoPage
+      initial={basicInfo}
+      onContinue={(info) => {
+        setBasicInfo(info);
+        setShowSurvey(true);
+      }}
+    />
   );
 }
