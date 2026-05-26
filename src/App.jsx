@@ -182,15 +182,19 @@ function BasicInfoPage({ onContinue, initial }) {
 
   const validate = () => {
     const e = {};
-    if (!info.name.trim()) e.name = "Required";
-    if (info.email && !/^\S+@\S+\.\S+$/.test(info.email)) e.email = "Enter a valid email";
+    const nameTrim = info.name?.trim();
+    if (!nameTrim) e.name = "Required";
+    else if (nameTrim.split(/\s+/).length < 2) e.name = "Enter full name (first and last)";
+    const emailTrim = info.email?.trim();
+    if (!emailTrim) e.email = "Required";
+    else if (!/^\S+@\S+\.\S+$/.test(emailTrim)) e.email = "Enter a valid email";
     if (!info.age || isNaN(+info.age) || +info.age < 15 || +info.age > 90)
       e.age = "Valid age (15–90)";
     if (!info.gender) e.gender = "Required";
     if (!info.occupation) e.occupation = "Required";
     if (!info.monthly_income) e.monthly_income = "Required";
     setErrors(e);
-    return !Object.keys(e).length;
+    return { valid: !Object.keys(e).length, first: Object.keys(e)[0] || null };
   };
 
   const baseInput = (field) => ({
@@ -319,8 +323,9 @@ function BasicInfoPage({ onContinue, initial }) {
         <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
           {/* Name */}
           <div style={fieldWrap}>
-            {label("NAME OR NICKNAME")}
+            {label("FULL NAME")}
             <input
+              id="field-name"
               type="text"
               placeholder="e.g. Juan dela Cruz"
               value={info.name}
@@ -336,13 +341,15 @@ function BasicInfoPage({ onContinue, initial }) {
 
           {/* Email */}
           <div style={fieldWrap}>
-            {label("EMAIL (optional)")}
+            {label("EMAIL")}
             <input
+              id="field-email"
               type="email"
               placeholder="e.g. juan@example.com"
               value={info.email}
               onChange={(e) => set("email", e.target.value)}
               style={baseInput("email")}
+              required
             />
             {errors.email && (
               <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>
@@ -356,14 +363,15 @@ function BasicInfoPage({ onContinue, initial }) {
             <div style={fieldWrap}>
               {label("AGE")}
               <input
-                type="number"
-                placeholder="e.g. 28"
-                min={15}
-                max={90}
-                value={info.age}
-                onChange={(e) => set("age", e.target.value)}
-                style={baseInput("age")}
-              />
+                  id="field-age"
+                  type="number"
+                  placeholder="e.g. 28"
+                  min={15}
+                  max={90}
+                  value={info.age}
+                  onChange={(e) => set("age", e.target.value)}
+                  style={baseInput("age")}
+                />
               {errors.age && (
                 <span style={{ color: "#FF6B6B", fontSize: "0.75rem" }}>
                   {errors.age}
@@ -373,6 +381,7 @@ function BasicInfoPage({ onContinue, initial }) {
             <div style={fieldWrap}>
               {label("GENDER")}
               <select
+                id="field-gender"
                 value={info.gender}
                 onChange={(e) => set("gender", e.target.value)}
                 style={selectBase("gender")}
@@ -395,6 +404,7 @@ function BasicInfoPage({ onContinue, initial }) {
           <div style={fieldWrap}>
             {label("OCCUPATION")}
             <select
+              id="field-occupation"
               value={info.occupation}
               onChange={(e) => set("occupation", e.target.value)}
               style={selectBase("occupation")}
@@ -421,6 +431,7 @@ function BasicInfoPage({ onContinue, initial }) {
           <div style={fieldWrap}>
             {label("MONTHLY HOUSEHOLD INCOME")}
             <select
+              id="field-monthly_income"
               value={info.monthly_income}
               onChange={(e) => set("monthly_income", e.target.value)}
               style={selectBase("monthly_income")}
@@ -462,7 +473,21 @@ function BasicInfoPage({ onContinue, initial }) {
 
           {/* CTA */}
           <button
-            onClick={() => validate() && onContinue(info)}
+            onClick={() => {
+              const res = validate();
+              if (res.valid) {
+                onContinue(info);
+                return;
+              }
+              const first = res.first;
+              if (first) {
+                const el = document.getElementById(`field-${first}`);
+                if (el) {
+                  el.scrollIntoView({ behavior: "smooth", block: "center" });
+                  try { el.focus(); } catch (err) {}
+                }
+              }
+            }}
             className="go-btn"
             style={{
               width: "100%",
